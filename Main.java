@@ -9,21 +9,21 @@ public class Main {
         memory.setSize("string", 16);
         String arrayPointer = memory.malloc("int", 4);
         String shortPointer = memory.malloc("short", 5);
-        print(new Memory().heapdump());
+        print(memory.heapdump());
         memory.call("foo", 2);
         String string1 = memory.malloc("crong", 1);
-        print(new Memory().callstack());
+        print(memory.callstack());
         memory.call("bar", 1);
         String string2 = memory.malloc("jk", 2);
         memory.returnFrom("bar");
         memory.free(string1);
-        print(new Memory().heapdump());
+        print(memory.heapdump());
         memory.free(string2);
-        print(new Memory().callstack());
+        print(memory.callstack());
         memory.garbageCollect();
-        print(new Memory().heapdump());
-        new Memory().reset();
-        print(new Memory().heapdump());
+        print(memory.heapdump());
+        memory.reset();
+        print(memory.heapdump());
     }
 
     static void print(String input) {
