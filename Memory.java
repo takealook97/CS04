@@ -2,12 +2,10 @@ import java.util.HashMap;
 
 public class Memory {
     int pointer;//4바이트 기준으로 동작하는 타입
+    String pointer2String;
     int integerType;
     String stringType;
     int shortType;
-
-
-
     static HashMap<String, Integer> stack = new HashMap<>();
     static HashMap<String, String> heap = new HashMap<>();
 
@@ -17,7 +15,7 @@ public class Memory {
             while (hex.length() < 2) {
                 hex = "0" + hex;
             }
-            stack.put("0x" + hex + "00", 0);//들어온 스택메모리 사이즈만큼 키값 생성
+            stack.put("0x" + hex + "00", null);//들어온 스택메모리 사이즈만큼 키값 생성
         }
         for (int i = 0; i < heapSize / 4; i++) {
             String hex = Integer.toHexString(i);
@@ -63,6 +61,15 @@ public class Memory {
     }
 
     String malloc(String type, int count) {
+        if ()
+            for (int i = 0; i < count; i++) {
+
+            }
+
+        return null;
+    }
+
+    String free(String stackAddress) {
         return null;
     }
 
@@ -75,7 +82,33 @@ public class Memory {
     }
 
     String usage() {
-        return null;
+        int stackSize = stack.size();
+        int stackLeft = 0;
+        for (int i = 0; i < stackSize; i++) {
+            String hex = Integer.toHexString(i);
+            while (hex.length() < 2) {
+                hex = "0" + hex;
+            }
+            if (stack.get("0x" + hex + "00") == null) {
+                stackLeft++;
+            }
+        }
+        int stackUsed = stackSize - stackLeft;
+
+        int heapSize = heap.size();
+        int heapLeft = 0;
+        for (int i = 0; i < heapSize; i++) {
+            String hex = Integer.toHexString(i);
+            while (hex.length() < 2) {
+                hex = "0" + hex;
+            }
+            if (heap.get("0x" + hex + "00") == null) {
+                heapLeft++;
+            }
+        }
+        int heapUsed = heapSize - heapLeft;
+        return stackSize + ", " + stackUsed + ", " + stackLeft + ", " +
+                heapSize + ", " + heapUsed + ", " + heapLeft;
     }
 
     String callstack() {
@@ -86,7 +119,11 @@ public class Memory {
         return null;
     }
 
-    void reset() {
+    void garbageCollect() {
 
+    }
+
+    void reset() {
+        new Memory().init(stack.size(), heap.size());
     }
 }
