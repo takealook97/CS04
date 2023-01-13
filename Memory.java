@@ -9,14 +9,14 @@ public class Memory {
     static HashMap<String, String> heap = new HashMap<>();
 
     String init(int stackSize, int heapSize) {
-        for (int i = 0; i < stackSize / 4; i++) {
+        for (int i = 0; i < stackSize; i++) {
             String hex = Integer.toHexString(i);
             while (hex.length() < 2) {
                 hex = "0" + hex;
             }
             stack.put("0x" + hex + "00", null);//들어온 스택메모리 사이즈만큼 키값 생성
         }
-        for (int i = 0; i < heapSize / 4; i++) {
+        for (int i = 0; i < heapSize; i++) {
             String hex = Integer.toHexString(i);
             while (hex.length() < 2) {
                 hex = "0" + hex;
@@ -43,7 +43,7 @@ public class Memory {
 
     String malloc(String type, int count) {//count만큼 반복 후 메모리할당, 시작주소 스택에 추가, 스택 주소값 리턴
         String startAddress = pointer2string();
-        stack.put(,pointer2string())//시작주소 스택에 추가
+        stack.put(?,pointer2string())//시작주소 스택에 추가
         if (integerSize < 8) integerSize = 8;
         else if (stringSize < 8) stringSize = 8;
         else if (shortSize < 8) shortSize = 8;//패딩 todo : 아예 바꾸는 것이 아니라 malloc할 때만 패딩을 붙여야하지 않나
