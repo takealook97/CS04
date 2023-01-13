@@ -61,10 +61,9 @@ public class Memory {
     }
 
     String malloc(String type, int count) {
-        if ()
-            for (int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++) {
 
-            }
+        }
 
         return null;
     }
@@ -82,9 +81,8 @@ public class Memory {
     }
 
     String usage() {
-        int stackSize = stack.size();
         int stackLeft = 0;
-        for (int i = 0; i < stackSize; i++) {
+        for (int i = 0; i < stack.size(); i++) {
             String hex = Integer.toHexString(i);
             while (hex.length() < 2) {
                 hex = "0" + hex;
@@ -93,11 +91,10 @@ public class Memory {
                 stackLeft++;
             }
         }
-        int stackUsed = stackSize - stackLeft;
+        int stackUsed = stack.size() - stackLeft;
 
-        int heapSize = heap.size();
         int heapLeft = 0;
-        for (int i = 0; i < heapSize; i++) {
+        for (int i = 0; i < heap.size(); i++) {
             String hex = Integer.toHexString(i);
             while (hex.length() < 2) {
                 hex = "0" + hex;
@@ -106,9 +103,9 @@ public class Memory {
                 heapLeft++;
             }
         }
-        int heapUsed = heapSize - heapLeft;
-        return stackSize + ", " + stackUsed + ", " + stackLeft + ", " +
-                heapSize + ", " + heapUsed + ", " + heapLeft;
+        int heapUsed = heap.size() - heapLeft;
+        return stack.size() + ", " + stackUsed + ", " + stackLeft + ", " +
+                heap.size() + ", " + heapUsed + ", " + heapLeft;
     }
 
     String callstack() {
@@ -116,7 +113,10 @@ public class Memory {
     }
 
     String[] heapdump() {
-        return null;
+        String type = "";
+        int size = 0;
+        String stackPointer = "";
+        return new String[]{type, Integer.toString(size), stackPointer};
     }
 
     void garbageCollect() {
