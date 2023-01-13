@@ -9,7 +9,6 @@ public class Main {
         memory.setSize("string", 16);
 
 
-
     }
     void print(String input){
         System.out.println(input);
