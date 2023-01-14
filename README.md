@@ -47,7 +47,7 @@
     - 등록된 type에 count만큼 반복해서 메모리할당
     - 고유한 시작위치주소를 스택영역에 추가
     - 스택주소값리턴
-  - free(pointer) : malloc 시 할당했던 스택 주소값을 입력으로 받는다.
+  - free(pointer) : malloc 시 할당했던 스택 주소값을 입력으로 받는다.(더 이상 사용하지 않는 영역)
   - call(name, paramCount) : 마지막 스택 위치 알려주는 스택포인터에 변수를 paramCount만큼 반복해서 생성하고 스택포인터 증가
   - returnFrom(name) : 증가했던 스택 공간 비우고 이전 호출 위치로 이동
   - usage() : 정보들을 배열로 리턴

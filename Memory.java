@@ -2,29 +2,24 @@ import java.util.HashMap;
 
 public class Memory {
     int pointer;//4바이트 기준으로 동작하는 타입
+    String bassaddress = getHexAddress(pointer);
     int integerSize;
     int stringSize;
     int shortSize;
+    int integerPointer;
+    int stringPointer;
+    int shortPointer;
     static HashMap<String, Integer> stack = new HashMap<>();
-    static HashMap<String, String> heap = new HashMap<>();
+    static HashMap<String, String[]> heap = new HashMap<>();
 
     String init(int stackSize, int heapSize) {
         for (int i = 0; i < stackSize; i++) {
-            String hex = Integer.toHexString(i);
-            while (hex.length() < 2) {
-                hex = "0" + hex;
-            }
-            stack.put("0x" + hex + "00", null);//들어온 스택메모리 사이즈만큼 키값 생성
+            stack.put(getHexAddress(i), null);//들어온 스택메모리 사이즈만큼 키값 생성
         }
         for (int i = 0; i < heapSize; i++) {
-            String hex = Integer.toHexString(i);
-            while (hex.length() < 2) {
-                hex = "0" + hex;
-            }
-            heap.put("0x" + hex + "00", null);//들어온 힙메모리 사이즈만큼 키값 생성
+            heap.put(getHexAddress(i), null);//들어온 힙메모리 사이즈만큼 키값 생성
         }
-
-        return "0x0000";
+        return bassaddress;
     }
 
     void setSize(String type, int length) {
@@ -42,8 +37,8 @@ public class Memory {
     }
 
     String malloc(String type, int count) {//count만큼 반복 후 메모리할당, 시작주소 스택에 추가, 스택 주소값 리턴
-        String startAddress = pointer2string();
-        stack.put(?,pointer2string())//시작주소 스택에 추가
+        stack.put(bassaddress, pointer);//시작주소 스택에 추가
+
         if (integerSize < 8) integerSize = 8;
         else if (stringSize < 8) stringSize = 8;
         else if (shortSize < 8) shortSize = 8;//패딩 todo : 아예 바꾸는 것이 아니라 malloc할 때만 패딩을 붙여야하지 않나
@@ -51,40 +46,33 @@ public class Memory {
         switch (type) {
             case "int":
                 for (int i = pointer; i < pointer + count * integerSize; i++) {//포인터를 시작점으로 count만큼의 범위 할당
-                    String hex = Integer.toHexString(i);
-                    while (hex.length() < 2) {
-                        hex = "0" + hex;
-                    }
-                    stack.put("0x" + hex + "00", ?);//todo 범위만 늘려주면되는데 무엇을 넣어야하는가?
+                    heap.put(getHexAddress(i), new Heap().heapInfo(type));
                 }
-                pointer += integerSize * count;
+                pointer += (integerSize * count);//타입에 맞게 힙에 추가 해준 뒤 늘어난 범위만큼 포인터 위치 변경
+                integerPointer = pointer;
+
                 break;
             case "string":
-                for (int i = pointer; i < pointer + count * integerSize; i++) {
-                    String hex = Integer.toHexString(i);
-                    while (hex.length() < 2) {
-                        hex = "0" + hex;
-                    }
-                    heap.put("0x" + hex + "00", ?);
+                for (int i = pointer; i < pointer + count * stringSize; i++) {
+                    heap.put(getHexAddress(i), new Heap().heapInfo(type));
                 }
-                pointer += stringSize * count;//할당한 범위의 끝으로 포인터 위치 조정
+                pointer += (stringSize * count);//할당한 범위의 끝으로 포인터 위치 조정
+                stringPointer = pointer;
                 break;
             case "short":
                 for (int i = pointer; i < pointer + count * shortSize; i++) {
-                    String hex = Integer.toHexString(i);
-                    while (hex.length() < 2) {
-                        hex = "0" + hex;
-                    }
-                    stack.put("0x" + hex + "00", ?);
+                    heap.put(getHexAddress(i), new Heap().heapInfo(type));
                 }
-                pointer += shortSize * count;
+                pointer += (shortSize * count);
+                shortPointer = pointer;
                 break;
         }
-        return pointer2string();
+        return getHexAddress(stack.get(bassaddress));
     }
 
 
     String free(String stackAddress) {
+        stackAddress = getHexAddress(stack.get(bassaddress));
         return null;
     }
 
@@ -99,11 +87,7 @@ public class Memory {
     String usage() {
         int stackLeft = 0;
         for (int i = 0; i < stack.size(); i++) {
-            String hex = Integer.toHexString(i);
-            while (hex.length() < 2) {
-                hex = "0" + hex;
-            }
-            if (stack.get("0x" + hex + "00") == null) {
+            if (stack.get(getHexAddress(i)) == null) {
                 stackLeft++;
             }
         }
@@ -111,11 +95,7 @@ public class Memory {
 
         int heapLeft = 0;
         for (int i = 0; i < heap.size(); i++) {
-            String hex = Integer.toHexString(i);
-            while (hex.length() < 2) {
-                hex = "0" + hex;
-            }
-            if (heap.get("0x" + hex + "00") == null) {
+            if (heap.get(getHexAddress(i)) == null) {
                 heapLeft++;
             }
         }
@@ -143,11 +123,13 @@ public class Memory {
         new Memory().init(stack.size(), heap.size());
     }
 
-    String pointer2string() {
-        String hex = Integer.toHexString(pointer);
+    String getHexAddress(int input) {
+        String hex = Integer.toHexString(input);
         while (hex.length() < 2) {
             hex = "0" + hex;
         }
         return "0x" + hex + "00";
     }
+
+
 }
